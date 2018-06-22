@@ -1,0 +1,7 @@
+selenium
+nose2
+pyhamcrest
+poormanslogging
+requests
+PyMySQL
+beautifulsoup4

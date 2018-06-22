@@ -1,0 +1,16 @@
+#test_Main.TxSimple.test_Approved
+#test_Main.TxSimple.test_TxInTwoSteps_Approved
+#test_Main.TxSimpleConAgregador
+#test_Main.TxDistribuida.test_DistribuidaPorMonto_Approved
+#test_Main.TxDistribuida.test_DistribuidaPorPorcentaje_Approved
+#test_Main.FormsTx.test_Approved
+#test_Main.FormsTx.test_Fail_WrongData
+#test_Main.FormsTx.test_Fail_TimeoutPaymentForm
+test_Main.AFIP.test_Payment_Failed_alreadyUsedVep
+#HAY UN BUG! Falla Forms con CS activo
+# Mejora: en los logs de WebTx, al estar activo MPOS, devuelve un error con las distribuidas. En cambio, al hacer una tx con REST, devuelve "mpos enabled"
+# BUG! En FormsTx se loguea el número de tarjeta plano.
+# TODO: add an exception handler, which returns current_url and saves a screenshot when an exception is raised.
+# TODO: repair FormsTx.test_Fail_TimeoutPaymentForm
+# TODO: upload code to GitHub.
+# TODO: add Exception to   not logging to SAC
