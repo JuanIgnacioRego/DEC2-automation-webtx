@@ -14,3 +14,13 @@ class SACLogin(BasePage):
         self.usuariosps.fill (environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["user"])
         self.passwordsps.fill (environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["password"])
         self.passwordsps.submit()
+        self.assertSucessfulLogin()
+
+    def assertSucessfulLogin(self):
+        if self.driver.current_url.endswith("/sac/LoginServlet"):
+            alert = self.driver.find_elements_by_xpath("//div[@class='txtrojochico']")
+            if len(alert):
+                if "No se han podido verificar los datos ingresados" in alert[0].text:
+                    raise Exception ("Username/password ({}/{}) wrong.".format( \
+                        environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["user"], \
+                        environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["password"]))

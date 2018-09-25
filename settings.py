@@ -13,7 +13,7 @@ environments={
             "baseURL" : "localhost",
             "port" : "18080",
             "user": "ccopello",
-            "password": "Prisma2039"
+            "password": "Prisma2043"
         },
         "QAPI":{
             "baseURL" : "localhost",
@@ -33,6 +33,10 @@ environments={
             "user":"spsT_usr",
             "passwd":"veef8Eed",
             "db":"sps433"
+        },
+        "requestBin":{
+            "baseURL":"localhost",
+            "port":"10113"
         }
 
     },
@@ -45,7 +49,7 @@ environments={
             "baseURL" : "localhost",
             "port" : "30080",
             "user": "ccopello",
-            "password": "pRISMA2034"
+            "password": "Prisma2040"
         },
         "QAPI":{
             "baseURL" : "localhost",
@@ -53,11 +57,18 @@ environments={
         },
         "coreTx": {
             "baseURL": "localhost",
-            "port": "19000"
+            "port": "30900"
         },
         "forms":{
             "baseURL":"localhost",
-            "port":"9006"
+            "port":"30090"
+        },
+        "database": {
+            "host":"localhost",
+            "port":30306,
+            "user":"spsT_usr",
+            "passwd":"veef8Eed",
+            "db":"sps433"
         }
 
     },
@@ -70,7 +81,7 @@ environments={
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
             "port" : "10010",
             "user": "ccopello",
-            "password": "Prisma2039"
+            "password": "Prisma2043"
         },
         "QAPI":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
@@ -90,6 +101,10 @@ environments={
             "user":"spsT_usr",
             "passwd":"veef8Eed",
             "db":"sps433"
+        },
+        "requestBin":{
+            "baseURL":"marathon-lb.infrastructure.marathon.mesos",
+            "port":"10113"
         }
 
     }

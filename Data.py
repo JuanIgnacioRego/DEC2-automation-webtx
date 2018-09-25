@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+import os
 
 compraSimpleMandatoryFields = [
     "NROCOMERCIO",
@@ -20,7 +21,7 @@ lifetime_Forms = 220
 # -- VISA --
 validationVisa = {
     "NOMBREENTARJETA" : "HOMERO JAY SIMPSON",
-    "NROTARJETA" : "4509790112684851",
+    "NROTARJETA" : "4509790113276723",#4242424242424242 #4509790112684851 #4509790112684851
     "idComboMes" : "12",
     "idComboAno" : "20",
     "CODSEGURIDAD" : "123",
@@ -39,7 +40,9 @@ compraSimpleVisa = {
     "CUOTAS": "12",
     "MONEDA": "1",
     "MEDIODEPAGO": "1",
-    "URLDINAMICA": "http://marathon-lb.infrastructure.marathon.mesos:10113/xxcabfxx"
+    #"URLDINAMICA": "http://request-bin:1529/t31qr0t3"
+    #"URLDINAMICA": "http://marathon-lb.infrastructure.marathon.mesos:10113/sxusbesx" this works!
+    "URLDINAMICA": os.getenv("PPBLINK")
 }
 
 compraDistribuidaVisa = {

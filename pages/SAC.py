@@ -40,7 +40,7 @@ class SACTxHistory(BasePage):
             sacTxRows = self.driver.find_elements_by_xpath(("//td[text()='{}']/..").format(txId))
 
         if not len(sacTxRows): raise TxNotFoundInSACError("The txId {} was not found in SAC. "
-                                                          "Please refresh Redis keys."
+                                                          "Please reinsert SAC key or refresh Redis keys."
                                                           .format(txId))
 
         for sacTxRow in sacTxRows:

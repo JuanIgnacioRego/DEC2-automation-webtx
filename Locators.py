@@ -154,3 +154,6 @@ class TemplateAFIPFormLocators:
     idComboAno = (By.NAME, "card_data.card_expiration_year")
     #CODSEGURIDAD = (By.XPATH, "//input[@id='cvc']")
     SUBMIT = (By.ID, "boton-pagar")
+
+class RequestBinLocators:
+    pass

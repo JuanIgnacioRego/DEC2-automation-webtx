@@ -1,6 +1,6 @@
 FROM python:2.7
 
-ADD test_Main.py /data/
+ADD test_WebTx.py /data/
 ADD Data.py /data/
 ADD pages /data/pages/
 ADD tools /data/tools/

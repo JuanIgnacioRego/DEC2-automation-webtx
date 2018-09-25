@@ -5,10 +5,38 @@ from subprocess import call
 import poormanslogging as log
 from settings import environments, defaultEnvironment, defaultDriver
 
+
+
 if __name__ == '__main__':
+    def selectDriver(argsDriver):
+        from selenium import webdriver
+
+        if argsDriver == "chrome":
+            return webdriver.Chrome("/home/juan/Automation/chromedriver")
+        if argsDriver == "headless_chrome":
+            driverOptions = webdriver.chrome.options.Options()
+            driverOptions.add_argument("--headless")
+            return webdriver.Chrome("/home/juan/Automation/chromedriver" ,chrome_options=driverOptions)
+        elif argsDriver == "remote_headless_chrome":
+            return webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub',
+                                           desired_capabilities=webdriver.common.desired_capabilities.DesiredCapabilities.CHROME)
+        else:
+            raise Exception("Driver '{}' is not handled".format(argsDriver))
+
+    def generatePPBLink(argsDriver):
+        from selenium import webdriver
+        from pages.RequestBin import RequestBin
+
+        driver = selectDriver(argsDriver)
+        requestBin = RequestBin (driver)
+        ppbLink = requestBin.generateMockLink()
+        driver.quit()
+        return ppbLink
+
+
     argsParser = argparse.ArgumentParser()
     argsParser.add_argument("-d", "--driver",
-                            choices=["chrome", "headless_chrome"],
+                            choices=["chrome", "headless_chrome", "remote_headless_chrome"],
                             help="Test using an specific browser driver, for example '--webdriver headless_chrome'. "
                                  "Chrome is used by default.")
     argsParser.add_argument("-ts", "--testsuite",
@@ -23,7 +51,10 @@ if __name__ == '__main__':
                             help="Indicate a build version. It will be used to generate report file name. "
                                  "For example, '--buildversion 75' will generate '75_report.xml' report file. "
                                  "A timestamp is used by default.")
-
+    argsParser.add_argument("-ppb", "--ppblink",
+                            help="Specify a link to make PPB (Post Por Background), for example "
+                                 "'--ppblink http://marathon-lb.infrastructure.marathon.mesos:10113/reyhgpre'. "
+                                 "If no link is sent as parameter, a new one will be generated using RequestBin.")
     args = argsParser.parse_args()
     if (args.environment and args.driver) or (not args.environment and args.driver):
         os.environ["DRIVER"] = args.driver
@@ -49,14 +80,21 @@ if __name__ == '__main__':
                     ).format(args.testsuite))
             exit()
 
+    os.environ["PPBLINK"] = args.ppblink if args.ppblink else generatePPBLink(os.environ["DRIVER"])
+
     log.info(("You're running on {} environment").format(os.environ["ENVIRONMENT"]))
     log.info(("You're using {} driver").format(environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["driver"]))
+    log.info(("Post Por Background link: {}").format(os.environ["PPBLINK"]))
+    log.info(("Report will be stored at path = {}reports/test_report_{}.xml".format
+            ("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins" else "",
+            os.getenv("BUILDVERSION",str(int(time.time()))))))
 
     #This is for using a report file name with timestamp format
     reportFile = open("unittest.cfg", "w")
     reportFile.write((
         "[unittest]\n"
         "plugins = nose2.plugins.junitxml\n"
+        #"plugins = nose2.plugins.layers\n"
         "\n"
         "[junit-xml]\n"
         "always-on = True\n"
@@ -77,6 +115,3 @@ if __name__ == '__main__':
 
     call(listToCall)
 
-"""
-nose2 test_St.test_CompraSimple.test_hola test_St.test_CompraSimple.test_chau test_St.test_CompraSimple.test_holaYChau    runner.run(suite())
-"""

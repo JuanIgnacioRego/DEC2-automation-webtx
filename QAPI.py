@@ -56,6 +56,7 @@ def unsetCS(siteId):
 def replicate(siteId):
     replicationResponse = requests.get(("http://{}:{}/replication/site/{}").format(coreTxBaseURL, coreTxPort, siteId))
 
+
 def setTxInTwoSteps(siteId, paymentMethodId):
     response = requests.post(("http://{}:{}/sites/dospasos").format(baseURL, port),
                 json={

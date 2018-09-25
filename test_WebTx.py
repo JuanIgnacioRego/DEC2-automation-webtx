@@ -13,8 +13,9 @@ from pages.SACLogin import SACLogin
 from pages.SACInicio import SACInicio
 from pages.SAC import SACTxHistory
 from pages.ConfirmTx import  ConfirmTx
+from pages.RequestBin import RequestBin
 import Data
-from tools import TraduccionCamposWebTx_SAC
+from tools import TraduccionCamposWebTx_SAC, processData
 from nose2 import *
 from nose2.tools.params import params
 import os
@@ -26,9 +27,11 @@ from Exceptions import *
 import poormanslogging as log
 import time
 
+
 # TODO: corregir los casos en los que se reescribe el txData["NROOPERACION"] para evitar el problema de idRepetido
 # TODO: antes de correr los test, en el setUp(), agregar QAPI.removeMPOS y .removeCS
 # TODO: generar una variable params, que tenga las tuplas
+
 
 class BaseTest:
 
@@ -45,7 +48,7 @@ class BaseTest:
 
         self.baseURL = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["baseURL"]
         self.port = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["port"]
-        if os.getenv("DRIVER", defaultDriver) == "headless_chrome":
+        if os.getenv("DRIVER", defaultDriver) == "remote_headless_chrome":
             self.driver = webdriver.Remote(command_executor='http://127.0.0.1:4444/wd/hub',
                                            desired_capabilities=DesiredCapabilities.CHROME)
         else:
@@ -53,6 +56,7 @@ class BaseTest:
             driverOptions.add_argument("--headless")
             self.driver = webdriver.Chrome("/home/juan/Automation/chromedriver")#,chrome_options=driverOptions)
         self.disableSpecialServices()
+        #self.driver.implicitly_wait(5)
 
     def tearDown(self):
         #self.driver.quit()
@@ -136,7 +140,23 @@ class BaseTest:
             assert_that(subTxs[i]["MONTO"], equal_to_ignoring_case(txData["IMPDIST"].split("#")[i]))
             assert_that(subTxs[i]["CUOTAS"], equal_to_ignoring_case(txData["CUOTASDIST"].split("#")[i]))
 
+    def assertTxPPB(self, txData, expectedTxStatus):
+        txData = processData(txData)
+
+        requestBin = RequestBin(self.driver)
+        ppbResult = requestBin.getTx(txData["NROOPERACION"], txData["URLDINAMICA"])
+
+        # Tx status assertion: in PPB, only two status should be informed: "Aprobada" and "Rechazada"
+        if expectedTxStatus in ["Autorizada", "Pre autorizada"]:
+            assert_that(ppbResult["RESULTADO"], equal_to_ignoring_case("Aprobada"))
+        else: #expectedStatus == "Rechazada"
+            assert_that(ppbResult["RESULTADO"], equal_to_ignoring_case("Rechazada"))
+
+        for key in [k for k in ppbResult.keys() if k in txData.keys()]:
+            assert_that(ppbResult[key], equal_to_ignoring_case(txData[key]), "PPB assertion failed")
+
 class TxSimple(BaseTest, unittest.TestCase):
+    #layer = LayerSimpleTx #It's necessary to import from Layer import LayerSimpleTx
 
     @params(
         (Data.compraSimpleVisa, Data.validationVisa, True),
@@ -147,8 +167,9 @@ class TxSimple(BaseTest, unittest.TestCase):
 
     def test_Approved(self, txData, validationData, expectedResult, expectedTxStatus="Autorizada"):
         txResult, satisfactoryTxData = self.runTx(txData, validationData, TemplateCompraSimple)
-        assert_that(txResult, expectedResult)
+        assert_that(txResult, expectedResult, "Tx was not approved: it was not possible to reach payment page.")
         self.assertTxInSAC(txData, validationData, expectedTxStatus)
+        self.assertTxPPB(txData, expectedTxStatus)
 
     @params(
         (Data.compraSimpleVisa, Data.validationVisa, True),
