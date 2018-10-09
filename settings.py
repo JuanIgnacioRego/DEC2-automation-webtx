@@ -81,7 +81,7 @@ environments={
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
             "port" : "10010",
             "user": "ccopello",
-            "password": "Prisma2043"
+            "password": "Prisma2042"
         },
         "QAPI":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",

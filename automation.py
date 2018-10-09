@@ -107,7 +107,7 @@ if __name__ == '__main__':
             )
     reportFile.close()
 
-    listToCall = ["nose2"] + ["--verbose"] + ["--config"] + ["unitest.cfg"]
+    listToCall = ["nose2"] + ["--verbose"] + ["--config"] + ["unitest.cfg"]# + ["--start-dir"] + ["tests"]
 
     if args.testsuite:
         for test in testsToRun:

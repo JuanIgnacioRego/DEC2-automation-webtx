@@ -35,3 +35,13 @@ class RequestBin(BasePage):
         assert_that (txId, equal_to(values["NROOPERACION"]), "PPB was not made for tx id {}".format(txId))
         return values
 
+    def getRawBody(self, data, ppbLink):
+        ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
+        ppbLink = ppbLink.replace("request-bin", "localhost")
+        ppbLink = ppbLink.replace("8000", "10113")
+        self.driver.get(ppbLink + "?inspect")
+        rawBodies = self.driver.find_elements_by_xpath("//pre[@class='body prettyprint']")
+        for rawBody in rawBodies:
+            if data in rawBody.text:
+                return rawBody.text
+        raise Exception("Data \"{}\" was not found as a raw body in RequestBin".format(data))

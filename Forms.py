@@ -10,8 +10,8 @@ def encryptTxId(aliasKey, vep):
     if response.ok:
         return (response.json()["encrypt"])
 
-def validateAFIP(vep, encryptedTxId, email="juan.rego@redb.ee", redirectUrl="http://www.afip.gob.ar/sitio/externos/default.asp"):
-    headers = {"X-Consumer-Username": "03101980_pci"}
+def validateAFIP(vep, encryptedTxId, site, email="juan.rego@redb.ee", redirectUrl="http://www.afip.gob.ar/sitio/externos/default.asp"):
+    headers = {"X-Consumer-Username": "{}_pci".format(site)}
     json = {
         "transaction_id": vep,
         "signed_transaction_id": encryptedTxId,

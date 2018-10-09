@@ -45,6 +45,19 @@ compraSimpleVisa = {
     "URLDINAMICA": os.getenv("PPBLINK")
 }
 
+validationVisa_AFIP = {
+    "NOMBREENTARJETA" : "Una Persona Fiscal",
+    "NROTARJETA" : "4509790113276723",#4242424242424242 #4509790112684851 #4509790112684851
+    "idComboMes" : "12",
+    "idComboAno" : "20",
+    "CODSEGURIDAD" : "123",
+    "EMAILCLIENTE" : "juan.rego@redb.ee"
+}
+txSimpleVisa_AFIP ={
+    "NROCOMERCIO": "03101980",
+    "NROOPERACION": str(int(time.time())),
+}
+
 compraDistribuidaVisa = {
     "NROCOMERCIO": "28464383",
     "NROOPERACION": "VISA_Distribuida " + str(int(time.time())),
@@ -161,3 +174,42 @@ compraSimpleConAgregador ={
 # -- FAILED CARDS! --
 validationVisa_ExpiredCard = validationVisa.copy()
 validationVisa_ExpiredCard ["idComboAno"] = "15"
+
+vepExample = {
+
+    "card_number" : "4507990000004905",
+
+    "user_cuit": "20240215455",
+
+    "number_vep": "000292454419",
+
+    "cp": {
+
+           "posting_date": "2017-03-21",
+
+           "transaction_id": "862637468273",
+
+           "payment_entity": "1002",
+
+           "payer_bank": "389",
+
+           "nro_ticket":"3839",
+
+           "control_code": "005248",
+
+           "payment_format": "1",
+
+           "payment_datetime": "2017-03-21 10:23:57",
+
+           "payment_form": "1",
+
+           "branch_office_type": 8,
+
+           "taxpayer": "20240215455",
+
+           "currency": "1",
+
+           "amount": "1186.30"
+     }
+
+}
