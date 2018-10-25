@@ -45,6 +45,7 @@ class BaseTest:
     def disableSpecialServices(self, siteId="28464383", paymentMethodId="1"):
         QAPI.unsetTxInTwoSteps(siteId, paymentMethodId)
         QAPI.unsetCS(siteId)
+        QAPI.setURLDinamica(siteId, mode="B")
 
     def setUp(self):
 
@@ -88,6 +89,7 @@ class BaseTest:
         return (validation.wasApproved(), satisfactoryTxData)
 
     def assertTxInSAC(self, txData, validationData, expectedTxStatus="Autorizada", isFatherTx=False, sacTxHistory=None):
+        #try:
         txId = txData["NROOPERACION"]
 
         if not sacTxHistory:
@@ -104,6 +106,8 @@ class BaseTest:
             assert_that(txData[key] if txData.has_key(key) else validationData[key],
                         equal_to_ignoring_case(sacTxData[key]))
 
+        #except Exception:
+        #    raise Warning("There was an error trying to assert tx in SAC. QAPI.checkDB used instead")
 
     def assertSubtxsByPercentaje(self, sacTxHistory, txData):
         """
@@ -146,9 +150,9 @@ class BaseTest:
         # La cantidad de ditribuidas
         # Que los montos y sitios de las distribuidas correspondan con el método en cuestión
         for site in subtxs:
-            assert_that(subtxs[site]["MONTO"], is_(equal_to(expectedSubTxAmounts[site])),
+            assert_that(float(subtxs[site]["MONTO"]), is_(equal_to(float(expectedSubTxAmounts[site]))),
                         "SubTx {} in site {} - Amount according to percentage configuration".format
-                        (subtx["NROCOMERCIO"], subtx["NROOPERACION"]))
+                        (subtx["NROOPERACION"], subtx["NROCOMERCIO"]))
 
         assert_that(subtxs.keys(), is_(equal_to(expectedSubTxSites)),
                     "Expected sites for subtxs")

@@ -97,7 +97,7 @@ def getIturanHash(txData, validationData):
     response = requests.post(("http://{}:{}/validate").format(formsBaseURL, formsPort),headers = headers,
                json={
                    "site": {
-                       "id": txData["NROCOMERCIO"],
+                       #"id": txData["NROCOMERCIO"],
                        "transaction_id": txData["NROOPERACION"]
                    }
                    ,

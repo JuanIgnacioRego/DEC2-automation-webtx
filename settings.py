@@ -13,7 +13,7 @@ environments={
             "baseURL" : "localhost",
             "port" : "18080",
             "user": "ccopello",
-            "password": "Prisma2043"
+            "password": "Prisma2044"
         },
         "QAPI":{
             "baseURL" : "localhost",
@@ -22,6 +22,42 @@ environments={
         "coreTx": {
             "baseURL": "localhost",
             "port": "19000"
+        },
+        "forms":{
+            "baseURL":"localhost",
+            "port":"9006"
+        },
+        "database": {
+            "host":"localhost",
+            "port":13306,
+            "user":"spsT_usr",
+            "passwd":"veef8Eed",
+            "db":"sps433"
+        },
+        "requestBin":{
+            "baseURL":"localhost",
+            "port":"10113"
+        }
+
+    },
+
+    "new_desa" : {
+        "driver" : "chrome",
+        "baseURL" : "localhost",
+        "port" : "49001",
+        "SACLogin":{
+            "baseURL" : "localhost",
+            "port" : "48080",
+            "user": "ccopello",
+            "password": "Prisma2043"
+        },
+        "QAPI":{
+            "baseURL" : "localhost",
+            "port" : "10115"
+        },
+        "coreTx": {
+            "baseURL": "localhost",
+            "port": "49000"
         },
         "forms":{
             "baseURL":"localhost",
