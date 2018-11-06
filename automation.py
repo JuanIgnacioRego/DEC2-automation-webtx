@@ -102,7 +102,7 @@ if __name__ == '__main__':
         #"path = /build/reports/test_report_{}.xml\n"
         "path = {}reports/test_report_{}.xml\n"
         "test_fullname = True\n"
-    ).format("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins" else "",
+    ).format("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkinsRemove" else "",
             os.getenv("BUILDVERSION",str(int(time.time()))))
             )
     reportFile.close()
