@@ -20,3 +20,6 @@ ls -R
 
 # After running
 docker rm -f selenium_chrome_remote
+
+#docker run --name selenium_chrome_remote -d --net host -v /dev/shm:/dev/shm -v AFIP_volume:/data/temp selenium/standalone-chrome:3.11.0-californium
+#docker run -i --rm --net host -v AFIP_volume:/data/temp/ webtx:local -e desa -d remote_headless_chrome -ts suite.txt

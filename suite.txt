@@ -2,7 +2,7 @@
 # -------- WEBTX --------
 #test_WebTx
 # -------- FORMS --------
-test_modules.Forms.test_Ituran
+#test_modules.Forms.test_Ituran
 #test_modules.Forms.test_Ituran.Ituran.test_Rejected_BrandMessages
 #test_modules.Forms.test_Ituran.Ituran.test_Approved_TimeoutPaymentForm_CustomValue
 #test_modules.Forms.test_Ituran.Ituran.test_Rejected_ExpiredCard
@@ -10,7 +10,7 @@ test_modules.Forms.test_Ituran
 #
 # -------- AFIP --------
 #test_modules.Forms.test_AFIP
-#test_modules.Forms.test_AFIP.AFIP.test_Payment_Approved
+test_modules.Forms.test_AFIP.AFIP.test_Payment_Approved
 #test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RepeatedVEP
 #test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RejectedCard
 #test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_TimeoutForm

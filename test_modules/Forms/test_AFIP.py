@@ -137,7 +137,7 @@ class AFIP(BaseTestForms, unittest.TestCase):
         rawForm = rawForm.replace('action="payments"',
                                   'action="http://{}:{}/payments"'.format(self.formsBaseURL, self.formsPort))
 
-        htmlFile = open("afip_form.html", "w", encoding="utf-8")
+        htmlFile = open("temp/afip_form.html", "w", encoding="utf-8")
         htmlFile.write(rawForm)
         htmlFile.close()
 
@@ -155,7 +155,7 @@ class AFIP(BaseTestForms, unittest.TestCase):
         """
 
     def fillForm(self, validationData):
-        self.driver.get("file:///{}/afip_form.html".format(os.getcwd()))
+        self.driver.get("file:///{}/temp/afip_form.html".format(os.getcwd()))
 
         self.driver.execute_script(
             "document.getElementById('NumeroTarjeta').setAttribute('value', '{}')".format(validationData["NROTARJETA"]))
