@@ -1,4 +1,5 @@
 from settings import *
+from Exceptions import URLStatusCodeNot200Exception
 import os
 import requests
 
@@ -10,7 +11,7 @@ def encryptTxId(aliasKey, vep):
     if response.ok:
         return (response.json()["encrypt"])
 
-def validateAFIP(vep, encryptedTxId, site, email="juan.rego@redb.ee", redirectUrl="http://www.afip.gob.ar/sitio/externos/default.asp"):
+def validateAFIP(vep, encryptedTxId, site, email="juan.rego@redb.ee", redirectUrl="http://www.redbee.io/"):
     headers = {"X-Consumer-Username": "{}_pci".format(site)}
     json = {
         "transaction_id": vep,
@@ -28,4 +29,9 @@ def validateAFIP(vep, encryptedTxId, site, email="juan.rego@redb.ee", redirectUr
                              json = json)
     if response.ok:
         return (response.text)
+    else:
+        raise URLStatusCodeNot200Exception("Received response has not been OK. Details: \n"
+                                           "Headers sent: \n {}\n"
+                                           "Request sent: \n {}\n"
+                                           "Response received: \n {}:{}\n".format(headers,json,response,response.text))
 

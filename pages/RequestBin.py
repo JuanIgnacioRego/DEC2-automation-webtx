@@ -3,6 +3,8 @@ from settings import *
 import os
 from tools import convertDictToWebTx,translationRequestBin_SAC
 from hamcrest import *
+from Exceptions import PPBNotFoundException
+#TODO: openRequestBinLink(), deshardcodearlo.
 
 class RequestBin(BasePage):
 
@@ -35,13 +37,39 @@ class RequestBin(BasePage):
         assert_that (txId, equal_to(values["NROOPERACION"]), "PPB was not made for tx id {}".format(txId))
         return values
 
-    def getRawBody(self, data, ppbLink):
+    def __getTx(self, txId, ppbLink):
         ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
         ppbLink = ppbLink.replace("request-bin", "localhost")
         ppbLink = ppbLink.replace("8000", "10113")
         self.driver.get(ppbLink + "?inspect")
+
+        keyPairs = self.driver.find_elements_by_xpath(
+            "//*[text()=' {}']/../p[@class='keypair']".format(txId))  # don't delete that fucking space!
+        values = {}
+        for keyPair in keyPairs:
+            keyPair = str(keyPair.text)
+            values[keyPair[:keyPair.find(":")]] = keyPair[keyPair.find(":") + 1:].strip()
+
+        values = convertDictToWebTx(values, translationRequestBin_SAC)
+        assert_that(txId, equal_to(values["NROOPERACION"]), "PPB was not made for tx id {}".format(txId))
+        return values
+
+
+    def getRawBody(self, data, ppbLink):
+        self.openRequestBinLink(ppbLink)
+
         rawBodies = self.driver.find_elements_by_xpath("//pre[@class='body prettyprint']")
         for rawBody in rawBodies:
             if data in rawBody.text:
                 return rawBody.text
-        raise Exception("Data \"{}\" was not found as a raw body in RequestBin".format(data))
+        raise PPBNotFoundException("Data \"{}\" was not found as a raw body in RequestBin".format(data))
+
+    def openRequestBinLink(self, ppbLink):
+        """
+        Redirects to tunneled RequestBin page, converting marathon-lb... to localhost
+        :param ppbLink: link where post por background was made, using SAC valid structure (marathon-lb...:8000/link)
+        """
+        ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
+        ppbLink = ppbLink.replace("request-bin", "localhost")
+        ppbLink = ppbLink.replace("8000", "10113")
+        self.driver.get(ppbLink + "?inspect")

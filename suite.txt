@@ -1,11 +1,17 @@
 #TODO: desactivar MPOS antes de correr regresiones
-test_WebTx.TxSimple.test_Approved
-test_WebTx.TxSimple.test_TxInTwoSteps_Approved
-test_WebTx.TxSimpleConAgregador
-test_WebTx.TxDistribuida.test_DistribuidaPorMonto_Approved
-test_WebTx.TxDistribuida.test_DistribuidaPorPorcentaje_Approved
-test_WebTx.FormsTx.test_Approved
-test_WebTx.FormsTx.test_Fail_WrongData
-#test_WebTx.FormsTx.test_Fail_TimeoutPaymentForm
-test_WebTx.AFIP.test_Payment_Approved
-test_WebTx.AFIP.test_Payment_Failed_RepeatedVEP
+# -------- WEBTX --------
+#test_WebTx
+# -------- FORMS --------
+test_modules.Forms.test_Ituran
+#test_modules.Forms.test_Ituran.Ituran.test_Rejected_BrandMessages
+#test_modules.Forms.test_Ituran.Ituran.test_Approved_TimeoutPaymentForm_CustomValue
+#test_modules.Forms.test_Ituran.Ituran.test_Rejected_ExpiredCard
+#test_modules.Forms.test_Ituran.Ituran.test_Failed_TimeoutPaymentForm_CustomValue_ExpiredForm
+#
+# -------- AFIP --------
+#test_modules.Forms.test_AFIP
+#test_modules.Forms.test_AFIP.AFIP.test_Payment_Approved
+#test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RepeatedVEP
+#test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RejectedCard
+#test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_TimeoutForm
+#test_modules.Forms

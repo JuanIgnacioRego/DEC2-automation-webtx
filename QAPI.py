@@ -5,6 +5,7 @@ import time
 import DBConnection
 import json
 
+
 baseURL = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["QAPI"]["baseURL"]
 port = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["QAPI"]["port"]
 coreTxBaseURL = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["coreTx"]["baseURL"]
@@ -90,38 +91,6 @@ def unsetURLDinamica(siteId, url, mode):
                              })
     if response.ok: replicate(siteId)
 
-def getIturanHash(txData, validationData):
-
-    headers = {"X-Consumer-Username":"{}_pci".format(txData["NROCOMERCIO"])}
-
-    response = requests.post(("http://{}:{}/validate").format(formsBaseURL, formsPort),headers = headers,
-               json={
-                   "site": {
-                       #"id": txData["NROCOMERCIO"],
-                       "transaction_id": txData["NROOPERACION"]
-                   }
-                   ,
-                   "customer": {
-                       "id": "Morton",
-                       "email": validationData["EMAILCLIENTE"]
-                   },
-                   "payment": {
-                       "amount": int(txData["MONTO"]),
-                       "currency": "ARS",
-                       "payment_method_id": int(txData["MEDIODEPAGO"]),
-                       "installments": int(txData["CUOTAS"]),
-                       "payment_type": "single",
-                       "sub_payments": []
-                   },
-                   "success_url": "http://www.ituran.com.ar/home",
-                   "cancel_url": "http://www.ituran.com.ar/pagos"
-               })
-
-    if response.ok:
-        return (response.json()["hash"])
-    else:
-        print (response.text)
-
 def getVepJSONObject(vep):
     response = requests.get(("http://{}:{}/vep/{}").format(baseURL, port,vep))
     if response.ok:
@@ -176,3 +145,11 @@ def getCurrency(currencyId):
     if len(currency)<1:
         raise Exception ("Currency was not found in DB with id = {}".format(currencyId))
     return currency[0]
+
+def setTimeoutPaymentForm(siteId, timeoutInMiliseconds):
+    currency = DBConnection.query("UPDATE sps433.spssites \
+                                  SET timeoutcompra = {} \
+                                    WHERE idsite = {}"
+                                  .format(timeoutInMiliseconds, siteId))
+
+    replicate(siteId)

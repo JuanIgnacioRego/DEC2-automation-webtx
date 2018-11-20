@@ -10,3 +10,7 @@ class URLStatusCodeNot200Exception(BaseError):
     its status code is not 200."""
     pass
 
+class PPBNotFoundException(BaseError):
+    """Exception raised when a txId has not been found in provided PPB link."""
+    pass
+

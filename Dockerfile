@@ -3,8 +3,11 @@ FROM python:2.7
 ADD test_WebTx.py /data/
 ADD Data.py /data/
 ADD pages /data/pages/
-ADD tools /data/tools/
 ADD reports /data/reports/
+ADD services /data/services/
+ADD test_modules /data/test_modules/
+ADD test_modules/Forms data/test_modules/Forms/
+ADD tools /data/tools/
 ADD automation.py /data/
 ADD Locators.py /data/
 ADD requirements.txt /data/

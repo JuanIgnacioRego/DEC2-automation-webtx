@@ -134,8 +134,7 @@ class SACInicioLocators(object):
 class SACTxHistoryLocators(object):
     pass
 
-class TemplateTxFormsLocators:
-
+class TemplateIturanLocators:
     NOMBREENTARJETA = (By.NAME, "card_data.card_holder_name")
     NROTARJETA = (By.NAME, "card_data.card_number")
     idComboMes = (By.NAME, "card_data.card_expiration_month")
@@ -144,8 +143,17 @@ class TemplateTxFormsLocators:
     NRODOC = (By.NAME, "card_data.card_holder_identification.number")
     SUBMIT = (By.ID, "send-button")
 
-class TemplateTxFormsResultLocators:
+class TemplateIturanResultLocators:
     resultMessage = (By.CLASS_NAME, "amount-label")
+
+class TemplateSwatchLocators:
+    NOMBREENTARJETA = (By.ID, "cardHolderName")
+    NROTARJETA = (By.ID, "cardNumber")
+    FECHAVTO = (By.ID, "cardExpiration")
+
+    CODSEGURIDAD = (By.ID, "securityCode")
+
+    SUBMIT = (By.ID, "submit")
 
 class TemplateAFIPFormLocators:
     NOMBREENTARJETA = (By.ID, "Nombre")

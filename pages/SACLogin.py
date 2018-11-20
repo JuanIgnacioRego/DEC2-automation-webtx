@@ -12,7 +12,10 @@ class SACLogin(BasePage):
 
     def login(self):
         self.usuariosps.fill (environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["user"])
-        self.passwordsps.fill (environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["password"])
+        if os.getenv("SACPASSWORD"):
+            self.passwordsps.fill(os.getenv("SACPASSWORD"))
+        else:
+            self.passwordsps.fill (environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["SACLogin"]["password"])
         self.passwordsps.submit()
         self.assertSucessfulLogin()
 

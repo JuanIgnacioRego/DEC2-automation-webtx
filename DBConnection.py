@@ -11,7 +11,8 @@ def query(sqlStatement):
                                  db=DBData["db"],  # name of the data base
                                  port=DBData["port"],
                                  charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)
+                                 cursorclass=pymysql.cursors.DictCursor,
+                                 autocommit=True)
 
     try:
         with connection.cursor() as cursor:

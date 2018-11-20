@@ -1,0 +1,48 @@
+#!/bin/bash
+
+registry='registry.dev.redbee.io'
+entorno='regresion_desa_remote'
+
+docker pull registry.dev.redbee.io/automation:latest
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-agregador -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-cs -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-devoluciones -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-distr -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-dospasos -e $entorno -r $BUILD#_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-merchant -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-mocks -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-mpos -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-offline -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-reutilizacion -e $entorno -r $BUILD_ID
+
+docker run -i --rm -v $WORKSPACE:/build/ $registry/automation:latest -t regresion-tokenization -e $entorno -r $BUILD_ID
+
+# Lo siguiente crea una carpeta con estructura "TestResults_xx" en "newman-test-result". Esto es un requisito para Allure,
+# ya que no lee archivos sino directorios para generar el reporte.
+
+cd newman-test-result
+mkdir TestResults_$BUILD_ID
+mv *_$BUILD_ID.xml TestResults_$BUILD_ID
+
+#WebTx
+docker pull registry.dev.redbee.io/webtxtest:latest
+echo start pulling
+docker pull selenium/standalone-chrome:3.11.0-californium
+echo finish pulling
+
+docker run -d --net host -v /dev/shm:/dev/shm selenium/standalone-chrome:3.11.0-californium
+
+docker run -i --rm --net host -v $WORKSPACE:/build/ registry.dev.redbee.io/webtxtest:latest -e jenkins -d remote_headless_chrome --buildversion $BUILD_ID -ts suite.txt
+
+ls -R
+mv build/reports/test_report_$BUILD_ID TestResults_$BUILD_ID

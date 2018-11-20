@@ -44,7 +44,7 @@ if __name__ == '__main__':
                                  "If no file is sent as parameter, all test cases will be run.")
     argsParser.add_argument("-e", "--environment",
                             choices=["desa", "local_machine", "jenkins"],
-                            help="Set an environment to run tests, for example '--environment jenkins' set baseURL, "
+                            help="Set an environment to run test_modules, for example '--environment jenkins' set baseURL, "
                             "port and browser driver to be deployed on Jenkins. "
                             "DESA environment is used by default.")
     argsParser.add_argument("-bv", "--buildversion",
@@ -55,6 +55,16 @@ if __name__ == '__main__':
                             help="Specify a link to make PPB (Post Por Background), for example "
                                  "'--ppblink http://marathon-lb.infrastructure.marathon.mesos:10113/reyhgpre'. "
                                  "If no link is sent as parameter, a new one will be generated using RequestBin.")
+    argsParser.add_argument("-genppb", "--generateppblink",
+                            help="Let you avoid --ppblink argument takes effect. "
+                                 "This argument is kept =True by default, but you can turn into False for testing process.",
+                            type=bool,
+                            default=True
+                            )
+    argsParser.add_argument("-sac", "--sacpassword",
+                            help="Specify a SAC password for user ccopello. If you don't provide this argument, "
+                                 "SAC password will be read from Data.py file"
+                            )
     args = argsParser.parse_args()
     if (args.environment and args.driver) or (not args.environment and args.driver):
         os.environ["DRIVER"] = args.driver
@@ -80,8 +90,13 @@ if __name__ == '__main__':
                     ).format(args.testsuite))
             exit()
 
-    os.environ["PPBLINK"] = args.ppblink if args.ppblink else generatePPBLink(os.environ["DRIVER"])
+    if args.generateppblink:
+        os.environ["PPBLINK"] = args.ppblink if args.ppblink else generatePPBLink(os.environ["DRIVER"])
+    else:
+        os.environ["PPBLINK"] = ""
 
+    if args.sacpassword:
+        os.environ["SACPASSWORD"] = args.sacpassword
     log.info(("You're running on {} environment").format(os.environ["ENVIRONMENT"]))
     log.info(("You're using {} driver").format(environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["driver"]))
     log.info(("Post Por Background link: {}").format(os.environ["PPBLINK"]))
@@ -102,12 +117,17 @@ if __name__ == '__main__':
         #"path = /build/reports/test_report_{}.xml\n"
         "path = {}reports/test_report_{}.xml\n"
         "test_fullname = True\n"
+        """
     ).format("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins" else "",
             os.getenv("BUILDVERSION",str(int(time.time()))))
             )
+        """
+        ).format("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins2" else "",
+                              os.getenv("BUILDVERSION", str(int(time.time()))))
+                     )
     reportFile.close()
 
-    listToCall = ["nose2"] + ["--verbose"] + ["--config"] + ["unitest.cfg"]# + ["--start-dir"] + ["tests"]
+    listToCall = ["nose2"] + ["--verbose"] + ["--config"] + ["unitest.cfg"]
 
     if args.testsuite:
         for test in testsToRun:

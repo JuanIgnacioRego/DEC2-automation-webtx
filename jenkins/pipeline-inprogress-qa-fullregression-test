@@ -1,0 +1,44 @@
+node{
+
+    build job: 'qa-resttx-agregador-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-agregador'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']], propagate: false
+    build job: 'qa-resttx-cs-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-cs'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']], propagate: false
+    build job: 'qa-resttx-devoluciones-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-devoluciones'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']], propagate: false
+    build job: 'qa-resttx-distr-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-distr'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']], propagate: false
+    build job: 'qa-resttx-dospasos-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-dospasos'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]    , propagate: false
+    build job: 'qa-resttx-merchant-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-merchant'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]    , propagate: false
+    build job: 'qa-resttx-mocks-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-mocks'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]    , propagate: false
+    build job: 'qa-resttx-mpos-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-mpos'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]    , propagate: false
+    build job: 'qa-resttx-offline-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-offline'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]    , propagate: false
+    build job: 'qa-resttx-reutilizacion-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-reutilizacion'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]    , propagate: false
+    build job: 'qa-resttx-tokenization-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-tokenization'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']], propagate: false
+    build job: 'qa-webtx-test', propagate: false
+    ws('/var/jenkins_home/workspace/qa-resttx-agregador-test') {
+        archive 'newman-test-result/*.xml'
+
+        junit 'newman-test-result/*.xml'
+    }
+
+
+
+    /*
+    //Structure of this map: ["nameOfJobInKenkins":"nameOfPostmanColletionInGithub"]
+    regressions = [
+        "qa-resttx-agregador-test":"regression-agregador",
+        "qa-resttx-cs-test":"regresion-cs",
+        "qa-resttx-devoluciones-test":"regresion-devoluciones",
+        "qa-resttx-distr-test":"regresion-distr",
+        "qa-resttx-dospasos-test":"regresion-dospasos",
+        "qa-resttx-merchant-test":"regresion-merchant",
+        "qa-resttx-mocks-test":"regresion-mocks",
+        "qa-resttx-mpos-test":"regresion-mpos",
+        "qa-resttx-offline-test":"regresion-offline",
+        "qa-resttx-reutilizacion-test":"regresion-reutilizacion",
+        "qa-resttx-tokenization-test":"regresion-tokenization",
+    ]
+
+    for (regression in regressions){
+        //build job: 'qa-resttx-agregador-test', parameters: [[$class: 'StringParameterValue', name: 'test', value: 'regresion-agregador'], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]
+        build job: regression.key, parameters: [[$class: 'StringParameterValue', name: 'test', value: regression.value], [$class: 'StringParameterValue', name: 'entorno', value: 'regresion_desa_remote']]
+    }
+    */
+}
