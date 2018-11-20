@@ -115,16 +115,10 @@ if __name__ == '__main__':
         "always-on = True\n"
         "keep_restricted = False\n"
         #"path = /build/reports/test_report_{}.xml\n"
-        "path = {}reports/test_report_{}.xml\n"
+        "path = reports/test_report_{}.xml\n"
         "test_fullname = True\n"
-        """
-    ).format("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins" else "",
-            os.getenv("BUILDVERSION",str(int(time.time()))))
-            )
-        """
-        ).format("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins2" else "",
-                              os.getenv("BUILDVERSION", str(int(time.time()))))
-                     )
+        ).format(os.getenv("BUILDVERSION", str(int(time.time())))))
+    
     reportFile.close()
 
     listToCall = ["nose2"] + ["--verbose"] + ["--config"] + ["unitest.cfg"]
