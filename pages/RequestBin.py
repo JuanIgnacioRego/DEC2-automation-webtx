@@ -1,6 +1,6 @@
 from pages.BasePage import BasePage
 from settings import *
-import os
+import os, time
 from tools import convertDictToWebTx,translationRequestBin_SAC
 from hamcrest import *
 from Exceptions import PPBNotFoundException
@@ -21,8 +21,7 @@ class RequestBin(BasePage):
         self.mockLink = self.driver.current_url.replace("?inspect", "").replace("localhost","marathon-lb.infrastructure.marathon.mesos")
         return self.mockLink
 
-
-    def getTx(self, txId, ppbLink):
+    def deprecated_getTx(self, txId, ppbLink):
         ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
         ppbLink = ppbLink.replace("request-bin", "localhost")
         ppbLink = ppbLink.replace("8000", "10113")
@@ -37,32 +36,51 @@ class RequestBin(BasePage):
         assert_that (txId, equal_to(values["NROOPERACION"]), "PPB was not made for tx id {}".format(txId))
         return values
 
-    def __getTx(self, txId, ppbLink):
-        ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
-        ppbLink = ppbLink.replace("request-bin", "localhost")
-        ppbLink = ppbLink.replace("8000", "10113")
-        self.driver.get(ppbLink + "?inspect")
+    def getTx(self, txId, ppbLink):
 
-        keyPairs = self.driver.find_elements_by_xpath(
-            "//*[text()=' {}']/../p[@class='keypair']".format(txId))  # don't delete that fucking space!
+        time.sleep(7)
+        self.openRequestBinLink(ppbLink)
+
+        attempts = 0
+        keyPairs = []
+        while (attempts < 3 and not len(keyPairs)):
+
+            keyPairs = self.driver.find_elements_by_xpath(
+                "//*[text()=' {}']/../p[@class='keypair']".format(txId))  # don't delete that fucking space!
+
+            if not len(keyPairs):
+                time.sleep(10)
+                attempts+=1
+
+        if attempts >= 3:
+            raise PPBNotFoundException("PPB was not found for TxId \"{}\" after {} attempts".
+                                       format(txId, attempts))
+
         values = {}
         for keyPair in keyPairs:
             keyPair = str(keyPair.text)
             values[keyPair[:keyPair.find(":")]] = keyPair[keyPair.find(":") + 1:].strip()
 
         values = convertDictToWebTx(values, translationRequestBin_SAC)
-        assert_that(txId, equal_to(values["NROOPERACION"]), "PPB was not made for tx id {}".format(txId))
         return values
 
-
     def getRawBody(self, data, ppbLink):
+        time.sleep(7)
         self.openRequestBinLink(ppbLink)
 
-        rawBodies = self.driver.find_elements_by_xpath("//pre[@class='body prettyprint']")
-        for rawBody in rawBodies:
-            if data in rawBody.text:
-                return rawBody.text
-        raise PPBNotFoundException("Data \"{}\" was not found as a raw body in RequestBin".format(data))
+        retries = 0
+        while (retries <3):
+
+            rawBodies = self.driver.find_elements_by_xpath("//pre[@class='body prettyprint']")
+            for rawBody in rawBodies:
+                if data in rawBody.text:
+                    return rawBody.text
+            time.sleep(15)
+            self.driver.refresh()
+            retries+=1
+
+        raise PPBNotFoundException("Data \"{}\" was not found as a raw body in RequestBin after {} attempts".
+                                   format(data, retries))
 
     def openRequestBinLink(self, ppbLink):
         """

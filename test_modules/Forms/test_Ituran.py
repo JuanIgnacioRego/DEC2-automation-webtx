@@ -103,7 +103,7 @@ class Ituran(BaseTestForms, unittest.TestCase):
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_56, False),
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_13, False),
     )
-    def notest_Rejected_BrandMessages(self, txData, validationData, expectedResult):
+    def test_Rejected_BrandMessages(self, txData, validationData, expectedResult):
         """Se realizan tx rechazadas con el objetivo de verificar el mensaje de error que devuelve la marca. """
         txData["NROOPERACION"] = "ITURAN " + str(int(time.time()))
         self.runTx(txData, validationData)
@@ -146,5 +146,3 @@ class Ituran(BaseTestForms, unittest.TestCase):
 
         expiredFormMessage = self.driver.find_element_by_xpath("//h1").text
         assert_that(expiredFormMessage, is_(equal_to("El formulario solicitado ha expirado")))
-
-

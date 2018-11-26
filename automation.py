@@ -1,4 +1,4 @@
-import time
+import time, datetime
 import argparse
 import os
 from subprocess import call
@@ -39,14 +39,18 @@ if __name__ == '__main__':
                             choices=["chrome", "headless_chrome", "remote_headless_chrome"],
                             help="Test using an specific browser driver, for example '--webdriver headless_chrome'. "
                                  "Chrome is used by default.")
-    argsParser.add_argument("-ts", "--testsuite",
-                            help="Specify a test suite to be run, for example '--testsuite home/user/smoke_test'. "
-                                 "If no file is sent as parameter, all test cases will be run.")
     argsParser.add_argument("-e", "--environment",
                             choices=["desa", "local_machine", "jenkins"],
                             help="Set an environment to run test_modules, for example '--environment jenkins' set baseURL, "
                             "port and browser driver to be deployed on Jenkins. "
                             "DESA environment is used by default.")
+    argsParser.add_argument("-ts", "--testsuite",
+                            help="Specify a test suite to be run, for example '--testsuite home/user/smoke_test'. "
+                                 "If no file is sent as parameter and --testmodule is not used, all test cases will be run.")
+    argsParser.add_argument("-tm", "--testmodule",
+                            choices=["test_WebTx"],
+                            help="Specify a test module to be run, for example '--testmodule test_WebTx'. "
+                                 "If no file is sent as parameter and --testsuite is not used, all test cases will be run.")
     argsParser.add_argument("-bv", "--buildversion",
                             help="Indicate a build version. It will be used to generate report file name. "
                                  "For example, '--buildversion 75' will generate '75_report.xml' report file. "
@@ -100,9 +104,8 @@ if __name__ == '__main__':
     log.info(("You're running on {} environment").format(os.environ["ENVIRONMENT"]))
     log.info(("You're using {} driver").format(environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["driver"]))
     log.info(("Post Por Background link: {}").format(os.environ["PPBLINK"]))
-    log.info(("Report will be stored at path = {}reports/test_report_{}.xml".format
-            ("/build/" if os.getenv("ENVIRONMENT", defaultEnvironment) == "jenkins" else "",
-            os.getenv("BUILDVERSION",str(int(time.time()))))))
+    log.info(("Report will be stored at path = reports/test_report_{}.xml".format
+            (os.getenv("BUILDVERSION",str(int(time.time()))))))
 
     #This is for using a report file name with timestamp format
     reportFile = open("unittest.cfg", "w")
@@ -117,15 +120,22 @@ if __name__ == '__main__':
         #"path = /build/reports/test_report_{}.xml\n"
         "path = reports/test_report_{}.xml\n"
         "test_fullname = True\n"
-        ).format(os.getenv("BUILDVERSION", str(int(time.time())))))
-    
+        ).format(os.getenv("BUILDVERSION", str(datetime.datetime.now()))))
+
     reportFile.close()
 
     listToCall = ["nose2"] + ["--verbose"] + ["--config"] + ["unitest.cfg"]
 
-    if args.testsuite:
+    if args.testsuite and args.testmodule:
+        raise Exception ("You can not specify a --testsuite AND a --testmodule. "
+               "You only can use one.\nTest regression was aborted.")
+
+    elif args.testsuite:
         for test in testsToRun:
             listToCall += [test]
+
+    elif args.testmodule:
+        listToCall += [args.testmodule]
 
     call(listToCall)
 

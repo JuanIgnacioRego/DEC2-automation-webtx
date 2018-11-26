@@ -147,9 +147,19 @@ def getCurrency(currencyId):
     return currency[0]
 
 def setTimeoutPaymentForm(siteId, timeoutInMiliseconds):
-    currency = DBConnection.query("UPDATE sps433.spssites \
+    timeout = DBConnection.query("UPDATE sps433.spssites \
                                   SET timeoutcompra = {} \
                                     WHERE idsite = {}"
                                   .format(timeoutInMiliseconds, siteId))
 
     replicate(siteId)
+
+def getTimeoutPaymentForm(siteId):
+        timeout = DBConnection.query("SELECT timeoutcompra \
+                                     FROM sps433.spssites \
+                                    WHERE idsite = {}"
+                                     .format(siteId))
+
+
+        replicate(siteId)
+        return (timeout)

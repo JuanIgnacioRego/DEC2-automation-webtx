@@ -101,24 +101,25 @@ class AFIP(BaseTestForms, unittest.TestCase):
         assert_that(jsonResponse["vendor_unique_id"], equal_to_ignoring_case(vep),
                     "Tx id (equal to VEP)")
 
-        assert_that(calling(self.assertTxPPB(os.getenv("PPBLINK"), vep, txData, validationData)),
+        assert_that(calling(self.assertTxPPB).with_args(os.getenv("PPBLINK"), vep, txData, validationData),
                     raises(PPBNotFoundException),
                     "Check that PPB has not been made for rejected tx with id {}".format(vep))
 
     @params((Data.forms_env["ALIAS_KEY"], generateVEP(), Data.txSimpleVisa_AFIP, Data.validationVisa,
              "Rechazada"))
     def test_Payment_Rejected_TimeoutForm(self, aliasKey, vep, txData, validationData, expectedTxStatus):
-        QAPI.setTimeoutPaymentForm(Data.forms_env["AFIP_SITE_ID"], 5)
-
+        QAPI.setTimeoutPaymentForm(Data.forms_env["AFIP_SITE_ID"], 15)
         self.buildForm(aliasKey, vep, txData, validationData)
         self.fillForm(validationData)
-        time.sleep(6)
+        time.sleep(20)
         self.submitForm()
+        time.sleep(3)
 
         expiredFormMessage = self.driver.find_element_by_xpath("//h1").text
         assert_that(expiredFormMessage, is_(equal_to("El formulario solicitado ha expirado")))
 
-        QAPI.setTimeoutPaymentForm(Data.forms_env["AFIP_SITE_ID"], 120)
+        QAPI.setTimeoutPaymentForm(Data.forms_env["AFIP_SITE_ID"], 1200)
+        print ("Timeout form time: {}".format(QAPI.getTimeoutPaymentForm("03101980")))
 
     def runTx(self, aliasKey, vep, txData, validationData):
         self.buildForm(aliasKey, vep, txData, validationData)
@@ -240,5 +241,3 @@ class AFIP(BaseTestForms, unittest.TestCase):
         #PPB amount field is showed as a string like "30000,00". It's necessary to replace "," per "." to make float cast.
         assert_that(float(ppbData["cp"]["amount"].replace(",",".")),
                     equal_to(float(vepJSONObject["payment"]["amount"])))
-
-
