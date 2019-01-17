@@ -13,7 +13,7 @@ environments={
             "baseURL" : "localhost",
             "port" : "18080",
             "user": "ccopello",
-            "password": "Prisma2046"
+            "password": "Prisma2047"
         },
         "QAPI":{
             "baseURL" : "localhost",
@@ -21,7 +21,7 @@ environments={
         },
         "coreTx": {
             "baseURL": "localhost",
-            "port": "19000"
+            "port": "10015"
         },
         "forms":{
             "baseURL":"localhost",
@@ -108,6 +108,42 @@ environments={
         }
 
     },
+    
+    "local_machine_mauro" : {
+        "driver" : "chrome",
+        "baseURL" : "localhost",
+        "port" : "30901",
+        "SACLogin":{
+            "baseURL" : "localhost",
+            "port" : "8080",
+            "user": "ccopello",
+            "password": "Prisma2044"
+        },
+        "QAPI":{
+            "baseURL" : "localhost",
+            "port" : "10115"
+        },
+        "coreTx": {
+            "baseURL": "localhost",
+            "port": "9002"
+        },
+        "forms":{
+            "baseURL":"localhost",
+            "port":"9004"	
+        },
+        "database": {
+            "host":"localhost",
+            "port":3306,
+            "user":"root",
+            "passwd":"root",
+            "db":"sps433"
+        },
+        "requestBin":{
+            "baseURL":"localhost",
+            "port":"8000"
+        }
+
+    },
 
     "jenkins" : {
         "driver" : "headless_chrome",
@@ -117,7 +153,7 @@ environments={
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
             "port" : "10010",
             "user": "ccopello",
-            "password": "Prisma2046"
+            "password": "Prisma2047"
         },
         "QAPI":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
@@ -125,7 +161,7 @@ environments={
         },
         "coreTx":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
-            "port" : "10000"
+            "port" : "10015"
         },
         "forms":{
             "baseURL":"marathon-lb.infrastructure.marathon.mesos",

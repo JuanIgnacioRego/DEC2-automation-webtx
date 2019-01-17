@@ -40,7 +40,7 @@ if __name__ == '__main__':
                             help="Test using an specific browser driver, for example '--webdriver headless_chrome'. "
                                  "Chrome is used by default.")
     argsParser.add_argument("-e", "--environment",
-                            choices=["desa", "local_machine", "jenkins"],
+                            choices=["desa", "local_machine", "local_machine_mauro", "jenkins"],
                             help="Set an environment to run test_modules, for example '--environment jenkins' set baseURL, "
                             "port and browser driver to be deployed on Jenkins. "
                             "DESA environment is used by default.")
@@ -120,6 +120,11 @@ if __name__ == '__main__':
         #"path = /build/reports/test_report_{}.xml\n"
         "path = reports/test_report_{}.xml\n"
         "test_fullname = True\n"
+        "\n"
+        "[output-buffer]\n"
+        "always-on = True\n"
+        "stderr = True\n"
+        "stdout = True"
         ).format(os.getenv("BUILDVERSION", str(datetime.datetime.now()))))
 
     reportFile.close()

@@ -143,6 +143,6 @@ class Ituran(BaseTestForms, unittest.TestCase):
                        operator.eq, False, 1)
         #log.debug("Finishing counting time")
         template.SUBMIT.click()
-
+        time.sleep(5)
         expiredFormMessage = self.driver.find_element_by_xpath("//h1").text
         assert_that(expiredFormMessage, is_(equal_to("El formulario solicitado ha expirado")))
