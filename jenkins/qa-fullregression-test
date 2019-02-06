@@ -46,3 +46,5 @@ docker run -i --rm --net host -v $WORKSPACE:/build/ registry.dev.redbee.io/webtx
 
 ls -R
 mv build/reports/test_report_$BUILD_ID TestResults_$BUILD_ID
+
+docker run -i --rm --net host registry.dev.redbee.io/webtxtest:latest -e local_machine_mauro -d remote_headless_chrome -ts suite.txt

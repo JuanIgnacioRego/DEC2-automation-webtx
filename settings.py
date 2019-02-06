@@ -13,7 +13,7 @@ environments={
             "baseURL" : "localhost",
             "port" : "18080",
             "user": "ccopello",
-            "password": "Prisma2046"
+            "password": "Prisma2048"
         },
         "QAPI":{
             "baseURL" : "localhost",
@@ -21,7 +21,7 @@ environments={
         },
         "coreTx": {
             "baseURL": "localhost",
-            "port": "19000"
+            "port": "10015"
         },
         "forms":{
             "baseURL":"localhost",
@@ -117,7 +117,7 @@ environments={
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
             "port" : "10010",
             "user": "ccopello",
-            "password": "Prisma2046"
+            "password": "Prisma2047"
         },
         "QAPI":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
@@ -125,7 +125,7 @@ environments={
         },
         "coreTx":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
-            "port" : "10000"
+            "port" : "10015"
         },
         "forms":{
             "baseURL":"marathon-lb.infrastructure.marathon.mesos",
@@ -146,4 +146,6 @@ environments={
     }
 }
 
+environments ["jenkins"] = environments["desa"].copy()
+environments ["jenkins"]["baseURL"] = "marathon-lb.infrastructure.marathon.mesos"
 

@@ -40,7 +40,7 @@ if __name__ == '__main__':
                             help="Test using an specific browser driver, for example '--webdriver headless_chrome'. "
                                  "Chrome is used by default.")
     argsParser.add_argument("-e", "--environment",
-                            choices=["desa", "local_machine", "jenkins"],
+                            choices=["desa", "local_machine", "local_machine_mauro", "jenkins"],
                             help="Set an environment to run test_modules, for example '--environment jenkins' set baseURL, "
                             "port and browser driver to be deployed on Jenkins. "
                             "DESA environment is used by default.")
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     reportFile.write((
         "[unittest]\n"
         "plugins = nose2.plugins.junitxml\n"
-        #"plugins = nose2.plugins.layers\n"
+        "plugins = nose2.plugins.layers\n"
         "\n"
         "[junit-xml]\n"
         "always-on = True\n"

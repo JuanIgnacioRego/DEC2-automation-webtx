@@ -79,6 +79,7 @@ class RequestBin(BasePage):
             self.driver.refresh()
             retries+=1
 
+        self.driver.get_screenshot_as_file("/reports/{}_ppb.png".format(str(int(time.time()))))
         raise PPBNotFoundException("Data \"{}\" was not found as a raw body in RequestBin after {} attempts".
                                    format(data, retries))
 
@@ -87,7 +88,8 @@ class RequestBin(BasePage):
         Redirects to tunneled RequestBin page, converting marathon-lb... to localhost
         :param ppbLink: link where post por background was made, using SAC valid structure (marathon-lb...:8000/link)
         """
-        ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
+        if os.getenv("ENVIRONMENT", defaultEnvironment) != "jenkins":
+            ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
         ppbLink = ppbLink.replace("request-bin", "localhost")
         ppbLink = ppbLink.replace("8000", "10113")
         self.driver.get(ppbLink + "?inspect")

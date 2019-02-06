@@ -5,3 +5,4 @@ poormanslogging
 requests
 PyMySQL
 beautifulsoup4
+jsonschema

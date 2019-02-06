@@ -147,13 +147,20 @@ class TemplateIturanResultLocators:
     resultMessage = (By.CLASS_NAME, "amount-label")
 
 class TemplateSwatchLocators:
-    NOMBREENTARJETA = (By.ID, "cardHolderName")
-    NROTARJETA = (By.ID, "cardNumber")
-    FECHAVTO = (By.ID, "cardExpiration")
+    cardHolderName = (By.ID, "cardHolderName")
+    cardNumber = (By.ID, "cardNumber")
+    cardExpiration = (By.ID, "cardExpiration")
+    securityCode = (By.ID, "securityCode")
+    securityCodeHelp = (By.ID, "cvvHelpButton")
+    submit = (By.XPATH, "//button[@type='submit']")
+    #cancel = (By.ID, "cancel-button")
+    #amount = (By.CLASS_NAME, "amount-box-installments")
+    #installments = (By.CLASS_NAME, "amount-box-total")
+    #headerImage = (By.ID, "headerImage")
+    #footerImage = (By.ID, "footerImage")
 
-    CODSEGURIDAD = (By.ID, "securityCode")
-
-    SUBMIT = (By.ID, "submit")
+class TemplateSwatchResultLocaltors:
+    pass
 
 class TemplateAFIPFormLocators:
     NOMBREENTARJETA = (By.ID, "Nombre")

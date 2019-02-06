@@ -10,3 +10,6 @@ docker run -i --rm --net host -v /home/{{yourUser}}/{{aPathToStoreReports}}:/rep
 For example:
 
 docker run -i --rm --net host -v /home/juan/Escritorio/origen:/data/reports/ registry.dev.redbee.io/webtxtest:latest -e desa -d selenium_chrome_remote -ts suite.txt
+docker run -i --rm --net host registry.dev.redbee.io/webtxtest:latest -e desa -d selenium_chrome_remote -ts suite.txt
+
+docker exec -it registry.dev.redbee.io/webtxtest:latest bash

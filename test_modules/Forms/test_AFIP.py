@@ -66,6 +66,7 @@ class AFIP(BaseTestForms, unittest.TestCase):
         # Check tx PPB
         self.assertTxPPB(os.getenv("PPBLINK"), vep, txData, validationData)
 
+
     @params((Data.forms_env["ALIAS_KEY"], Data.txSimpleVisa_AFIP["NROOPERACION"], Data.txSimpleVisa_AFIP, Data.validationVisa_AFIP,
              "Rechazada"))
     def test_Payment_Rejected_RepeatedVEP(self, aliasKey, vep, txData, validationData, expectedTxStatus):
@@ -107,7 +108,7 @@ class AFIP(BaseTestForms, unittest.TestCase):
 
     @params((Data.forms_env["ALIAS_KEY"], generateVEP(), Data.txSimpleVisa_AFIP, Data.validationVisa,
              "Rechazada"))
-    def test_Payment_Rejected_TimeoutForm(self, aliasKey, vep, txData, validationData, expectedTxStatus):
+    def avoidtest_Payment_Rejected_TimeoutForm(self, aliasKey, vep, txData, validationData, expectedTxStatus):
         QAPI.setTimeoutPaymentForm(Data.forms_env["AFIP_SITE_ID"], 15)
         self.buildForm(aliasKey, vep, txData, validationData)
         self.fillForm(validationData)
@@ -117,6 +118,10 @@ class AFIP(BaseTestForms, unittest.TestCase):
 
         expiredFormMessage = self.driver.find_element_by_xpath("//h1").text
         assert_that(expiredFormMessage, is_(equal_to("El formulario solicitado ha expirado")))
+
+        assert_that(calling(self.assertTxPPB).with_args(os.getenv("PPBLINK"), vep, txData, validationData),
+                    raises(PPBNotFoundException),
+                    "Check that PPB has not been made for rejected tx with id {}".format(vep))
 
         QAPI.setTimeoutPaymentForm(Data.forms_env["AFIP_SITE_ID"], 1200)
         print ("Timeout form time: {}".format(QAPI.getTimeoutPaymentForm("03101980")))
@@ -130,11 +135,11 @@ class AFIP(BaseTestForms, unittest.TestCase):
         #from bs4 import BeautifulSoup
         from io import open
         import os
-        import Forms
+        import deprecated_Forms
 
-        encryptedVep = Forms.encryptTxId(aliasKey, vep)
-        rawForm = Forms.validateAFIP(vep, encryptedVep, site=txData["NROCOMERCIO"],
-                                     email=validationData["EMAILCLIENTE"])
+        encryptedVep = deprecated_Forms.encryptTxId(aliasKey, vep)
+        rawForm = deprecated_Forms.validateAFIP(vep, encryptedVep, site=txData["NROCOMERCIO"],
+                                                email=validationData["EMAILCLIENTE"])
         rawForm = rawForm.replace('action="payments"',
                                   'action="http://{}:{}/payments"'.format(self.formsBaseURL, self.formsPort))
 

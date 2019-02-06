@@ -14,7 +14,7 @@ ADD requirements.txt /data/
 ADD unittest.cfg /data/
 ADD settings.py /data/
 ADD QAPI.py /data/
-ADD Forms.py /data/
+ADD deprecated_Forms.py /data/
 ADD DBConnection.py /data/
 ADD suite.txt /data/
 ADD Exceptions.py /data/

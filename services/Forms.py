@@ -4,6 +4,7 @@ from settings import *
 import time
 import DBConnection
 import json
+from Exceptions import URLStatusCodeNot200Exception
 
 baseURL = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["QAPI"]["baseURL"]
 port = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["QAPI"]["port"]
@@ -44,14 +45,23 @@ def getIturanHash(txData, validationData):
     else:
         print (response.text)
 
-def getFormsHash(txData, validationData):
+def getSwatchHash(txData, validationData):
 
-    headers = {"X-Consumer-Username":"{}_pci".format(txData["NROCOMERCIO"])}
+    headers = {
+        "Content-Type":"application/json",
+        "X-Consumer-Username":"{}_pci".format(txData["siteId"])
+    }
 
+
+    response = requests.post(("http://{}:{}/validate").format(formsBaseURL, formsPort),
+                             headers = headers,
+                             json = validationData)
+    """
     response = requests.post(("http://{}:{}/validate").format(formsBaseURL, formsPort),headers = headers,
                json={
                  "site": {
-                     "transaction_id": "Forms a.k.a. Swatch {}".format(txData["NROOPERACION"]),
+                     #"id": txData["NROCOMERCIO"],
+                     "transaction_id": "Swatch {}".format(txData["NROOPERACION"]),
                      "template": {
                          "id": 4
                      }
@@ -64,16 +74,21 @@ def getFormsHash(txData, validationData):
                      "amount": int(txData["MONTO"]),
                      "currency": "ARS",
                      "payment_method_id":int(txData["MEDIODEPAGO"]),
-                     "bin": validationData["NROTARJETA"][:6],
+                     #"bin": validationData["NROTARJETA"][:6],
                      "installments" : int(txData["CUOTAS"]),
                      "payment_type": "single",
                      "sub_payments" : []
                  },
-                 "redirect_url": "https://www.swatch.com/es_ar/",
+                 "success_url": "http://www.redbee.io/",
                  "cancel_url": "https://shop.swatch.com/es_ar/"
+                }
+    )
+    """
 
-                })
+    return response
+    """
     if response.ok:
         return (response.json()["hash"])
     else:
-        print (response.text)
+        raise URLStatusCodeNot200Exception(response.status_code, response.text)
+    """

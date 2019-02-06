@@ -25,7 +25,7 @@ class BasePage(object):
                     raise URLStatusCodeNot200Exception("URL {} is not reachable. \n"
                                                        "Requesting a /GET to this direction "
                                                        "returns a status code different from 200 [OK]. \n"
-                                                       "Status code received: {}.".format
-                                                       (self.driver.current_url, response.status_code))
+                                                       "Status code received: {}.\n Message: {}".format
+                                                       (self.driver.current_url, response.status_code, response.text))
 
 

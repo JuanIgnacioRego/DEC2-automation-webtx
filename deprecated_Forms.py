@@ -31,7 +31,7 @@ def validateAFIP(vep, encryptedTxId, site, email="juan.rego@redb.ee", redirectUr
         return (response.text)
     else:
         raise URLStatusCodeNot200Exception("Received response has not been OK. Details: \n"
-                                           "Headers sent: \n {}\n"
-                                           "Request sent: \n {}\n"
+                                           #"Headers sent: \n {}\n"
+                                           #"Request sent: \n {}\n"
                                            "Response received: \n {}:{}\n".format(headers,json,response,response.text))
 

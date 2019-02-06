@@ -61,7 +61,7 @@ class Ituran(BaseTestForms, unittest.TestCase):
 
     @params((Data.compraSimpleVisa, Data.validationVisa, True),)
     def test_Approved(self, txData, validationData, expectedResult, expectedTxStatus="Autorizada"):
-        """Una tx exitosa vía Ituran. Se verifica que una vez aprobado el pago este se presente en el SAC y realice el PPB. """
+        """Una tx exitosa vía Ituran. Se verifica que una vez aprobado el pago, se visualice en el SAC y realice el PPB. """
         txData["NROOPERACION"] = "ITURAN " + str(int(time.time()))
         QAPI.unsetURLDinamica(txData["NROCOMERCIO"], os.getenv("PPBLINK"), "B")
         self.runTx(txData, validationData)
@@ -82,11 +82,11 @@ class Ituran(BaseTestForms, unittest.TestCase):
         self.runTx(txData, validationData)
 
         templateTxResult = TemplateIturanResult(self.driver)
+        time.sleep(3)
         assert_that(templateTxResult.getTxStatus(), is_(expectedResult), "Tx status (approved/rejected)")
         assert_that(calling(self.assertTxInSAC).with_args(txData, validationData), raises(TxNotFoundInSACError))
 
     @params(
-        (Data.compraSimpleVisa, Data.validationVisa_Rejected_51, False),
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_54, False),
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_05, False),
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_03, False),
@@ -103,15 +103,17 @@ class Ituran(BaseTestForms, unittest.TestCase):
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_56, False),
         (Data.compraSimpleVisa, Data.validationVisa_Rejected_13, False),
     )
-    def test_Rejected_BrandMessages(self, txData, validationData, expectedResult):
-        """Se realizan tx rechazadas con el objetivo de verificar el mensaje de error que devuelve la marca. """
+    def avoidtest_Rejected_BrandMessages(self, txData, validationData, expectedResult):
+        """Se realizan tx con tarjetas que rechazan pagos. El objetivo es que se devuelva "RECHAZADA" como mensaje,\
+         y no el motivo que devuelve la marca."""
         txData["NROOPERACION"] = "ITURAN " + str(int(time.time()))
         self.runTx(txData, validationData)
 
         templateTxResult = TemplateIturanResult(self.driver)
+        time.sleep(3)
         assert_that(templateTxResult.getTxStatus(), is_(expectedResult), "Tx status (approved/rejected)")
         assert_that(templateTxResult.getTxResultDetails(),
-                    is_(validationData["brandMessage"]))
+                    is_("RECHAZADA"))
 
     @params((Data.compraSimpleVisa, Data.validationVisa, True, 15.0), )
     def test_Approved_TimeoutPaymentForm_CustomValue(self, txData, validationData, expectedResult, customTimeout):
@@ -120,11 +122,14 @@ class Ituran(BaseTestForms, unittest.TestCase):
         dentro de esos 15 segundos."""
         QAPI.setTimeoutPaymentForm(txData["NROCOMERCIO"], customTimeout)
         self.test_Approved(txData, validationData, expectedResult)
+        #Se retorna al timeout por defecto para el site en cuestión.
+        QAPI.setTimeoutPaymentForm(txData["NROCOMERCIO"], 120.0)
 
     @params((Data.compraSimpleVisa, Data.validationVisa, False, 15.0),)
     def test_Failed_TimeoutPaymentForm_CustomValue_ExpiredForm(self, txData, validationData, expectedResult, customTimeout):
         """Con el tiempo de vida del formulario en 15 segundos, se intenta realizar una tx pasado este tiempo. La tx debe ser fallida."""
         txData["NROOPERACION"] = "ITURAN " + str(int(time.time()))
+        QAPI.setTimeoutPaymentForm(txData["NROCOMERCIO"], customTimeout)
 
         import datetime
         import operator
@@ -146,3 +151,4 @@ class Ituran(BaseTestForms, unittest.TestCase):
 
         expiredFormMessage = self.driver.find_element_by_xpath("//h1").text
         assert_that(expiredFormMessage, is_(equal_to("El formulario solicitado ha expirado")))
+        QAPI.setTimeoutPaymentForm(txData["NROCOMERCIO"], 120.0)

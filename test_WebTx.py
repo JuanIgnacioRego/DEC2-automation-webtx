@@ -55,6 +55,7 @@ class BaseTest(object):
 
     def tearDown(self):
         self.driver.quit()
+        #pass
 
     def runTx(self, txData, validationData, txTemplate):
         template = txTemplate(self.driver, self.baseURL, self.port)
@@ -65,6 +66,7 @@ class BaseTest(object):
         satisfactoryTxData = {}
         if validation.wasApproved():
             self.fillTemplate(validation, validationData)
+            time.sleep(3)
             validation.SUBMIT.click()
             if validationData["NROTARJETA"].startswith("5"):
                 confirmTx = ConfirmTx(self.driver)

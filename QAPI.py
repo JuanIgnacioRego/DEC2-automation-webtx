@@ -4,7 +4,8 @@ from settings import *
 import time
 import DBConnection
 import json
-
+from Data import CyberSource as CS
+from Exceptions import URLStatusCodeNot200Exception
 
 baseURL = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["QAPI"]["baseURL"]
 port = environments[os.getenv("ENVIRONMENT", defaultEnvironment)]["QAPI"]["port"]
@@ -48,6 +49,25 @@ def deleteSubsites(siteId, subsitesIds=""):
                              })
     if response.ok: replicate(siteId)
 
+def setCS(siteId, vertical, securityKey="", mid="decidir_agregador", modelo="2", continuarFaltandoDatosRequeridos="N", reversoAutomaticoIndisponibilidadCS="N"):
+    response = requests.post("http://{}:{}/sites/cs".format(baseURL, port),
+                             json={
+                                 "site": siteId,
+                                 "security_key": securityKey if securityKey else CS["securityKey"],
+                                 "modelo": modelo,
+                                 "mid": mid,
+                                 "rubro": CS["verticales"][vertical],
+                                 "continuar": continuarFaltandoDatosRequeridos,
+                                 "reverso": reversoAutomaticoIndisponibilidadCS
+                             })
+    if response.ok:
+        replicate(siteId)
+    else:
+        raise URLStatusCodeNot200Exception("HTTP status not OK after requesting. Status received is {}: \n {}".format(
+            response.status_code, response.text))
+
+
+
 def unsetCS(siteId):
     response = requests.delete(("http://{}:{}/sites/cs").format(baseURL, port),
                                json={
@@ -89,7 +109,10 @@ def unsetURLDinamica(siteId, url, mode):
                                  "url": url,
                                  "mode": mode
                              })
-    if response.ok: replicate(siteId)
+    if response.ok:
+        replicate(siteId)
+    else:
+        raise URLStatusCodeNot200Exception ("Status received:{}".format(response.text))
 
 def getVepJSONObject(vep):
     response = requests.get(("http://{}:{}/vep/{}").format(baseURL, port,vep))
@@ -160,6 +183,22 @@ def getTimeoutPaymentForm(siteId):
                                     WHERE idsite = {}"
                                      .format(siteId))
 
-
-        replicate(siteId)
         return (timeout)
+
+def setCardNumberFormat(siteId, paymentMethodId, cardNumberFormat):
+    DBConnection.query("UPDATE sps433.spsmedpagotienda \
+                                SET FORMATONROTARJETAVISIBLE = {} \
+                                WHERE idsite = {} \
+                                AND idmediopago = {}"
+                                 .format(cardNumberFormat, siteId, paymentMethodId))
+
+    replicate(siteId)
+
+def getCardNumberFormat(siteId, paymentMethodId):
+    cardNumberFormat = DBConnection.query("SELECT FORMATONROTARJETAVISIBLE  \
+                                    FROM sps433.spsmedpagotienda \
+                                    WHERE idsite = {} \
+                                    AND idmediopago = {}"
+                       .format(siteId, paymentMethodId))
+
+    return cardNumberFormat
