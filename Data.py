@@ -198,7 +198,8 @@ compraSimpleConAgregador ={
 "MONTO": "2000",
 "CUOTAS": "12",
 "MONEDA": "1",
-"MEDIODEPAGO": "1"
+"MEDIODEPAGO": "1",
+"URLDINAMICA": os.getenv("PPBLINK")
    
 }
 

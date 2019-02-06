@@ -120,6 +120,11 @@ if __name__ == '__main__':
         #"path = /build/reports/test_report_{}.xml\n"
         "path = reports/test_report_{}.xml\n"
         "test_fullname = True\n"
+        "\n"
+        "[output-buffer]\n"
+        "always-on = True\n"
+        "stderr = True\n"
+        "stdout = True"
         ).format(os.getenv("BUILDVERSION", str(datetime.datetime.now()))))
 
     reportFile.close()

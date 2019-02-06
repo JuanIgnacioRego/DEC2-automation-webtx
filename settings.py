@@ -13,7 +13,7 @@ environments={
             "baseURL" : "localhost",
             "port" : "18080",
             "user": "ccopello",
-            "password": "Prisma2048"
+            "password": "Prisma2049"
         },
         "QAPI":{
             "baseURL" : "localhost",
@@ -105,6 +105,42 @@ environments={
             "user":"spsT_usr",
             "passwd":"veef8Eed",
             "db":"sps433"
+        }
+
+    },
+    
+    "local_machine_mauro" : {
+        "driver" : "chrome",
+        "baseURL" : "localhost",
+        "port" : "30901",
+        "SACLogin":{
+            "baseURL" : "localhost",
+            "port" : "8080",
+            "user": "ccopello",
+            "password": "Prisma2044"
+        },
+        "QAPI":{
+            "baseURL" : "localhost",
+            "port" : "10115"
+        },
+        "coreTx": {
+            "baseURL": "localhost",
+            "port": "9002"
+        },
+        "forms":{
+            "baseURL":"localhost",
+            "port":"9004"	
+        },
+        "database": {
+            "host":"localhost",
+            "port":3306,
+            "user":"root",
+            "passwd":"root",
+            "db":"sps433"
+        },
+        "requestBin":{
+            "baseURL":"localhost",
+            "port":"8000"
         }
 
     },

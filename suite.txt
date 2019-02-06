@@ -1,4 +1,3 @@
-#TODO: desactivar MPOS antes de correr regresiones
 # -------- DONE --------
 test_WebTx
 test_modules.Forms.test_Ituran
@@ -26,3 +25,4 @@ test_modules.Forms.test_Swatch.Swatch.test_Swatch_CancelURL_InvalidParam
 #test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RepeatedVEP
 #test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RejectedCard
 ##test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_TimeoutForm
+#test_modules.Forms.test_AFIP.AFIP.test_Payment_Rejected_RejectedCard
