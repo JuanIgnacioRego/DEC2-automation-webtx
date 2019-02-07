@@ -92,4 +92,5 @@ class RequestBin(BasePage):
             ppbLink = ppbLink.replace("marathon-lb.infrastructure.marathon.mesos", "localhost")
         ppbLink = ppbLink.replace("request-bin", "localhost")
         ppbLink = ppbLink.replace("8000", "10113")
+        print("Reaching PPB link {}".format(ppbLink))
         self.driver.get(ppbLink + "?inspect")

@@ -153,7 +153,7 @@ environments={
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
             "port" : "10010",
             "user": "ccopello",
-            "password": "Prisma2047"
+            "password": "Prisma2049"
         },
         "QAPI":{
             "baseURL" : "marathon-lb.infrastructure.marathon.mesos",
@@ -182,6 +182,6 @@ environments={
     }
 }
 
-environments ["jenkins"] = environments["desa"].copy()
-environments ["jenkins"]["baseURL"] = "marathon-lb.infrastructure.marathon.mesos"
+#environments ["jenkins"] = environments["desa"].copy()
+#environments ["jenkins"]["baseURL"] = "marathon-lb.infrastructure.marathon.mesos"
 
